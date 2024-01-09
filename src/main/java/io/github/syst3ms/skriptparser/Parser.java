@@ -27,7 +27,7 @@ import java.util.jar.Manifest;
 
 public class Parser {
     public static final String CONSOLE_FORMAT = "[%tT] %s: %s%n";
-    private static SkriptRegistration registration;
+    public static SkriptRegistration registration;
 
     private static List<LogEntry> logs;
 

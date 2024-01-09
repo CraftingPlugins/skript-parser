@@ -6,6 +6,7 @@ import io.github.syst3ms.skriptparser.lang.Expression;
 import io.github.syst3ms.skriptparser.lang.TriggerContext;
 import io.github.syst3ms.skriptparser.lang.base.TaggedExpression;
 import io.github.syst3ms.skriptparser.parsing.ParseContext;
+import lombok.Getter;
 
 /**
  * Prints some text to the console
@@ -23,6 +24,7 @@ public class EffPrint extends Effect {
         );
     }
 
+    @Getter
     private Expression<String> expression;
 
     @SuppressWarnings("unchecked")
