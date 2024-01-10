@@ -16,6 +16,7 @@ import io.github.syst3ms.skriptparser.types.comparisons.Comparators;
 import io.github.syst3ms.skriptparser.types.comparisons.Relation;
 import io.github.syst3ms.skriptparser.util.ClassUtils;
 import io.github.syst3ms.skriptparser.util.StringUtils;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -38,6 +39,7 @@ import java.util.Optional;
  * @pattern [neither] %objects% [each] ((is|are) [each] [equal to|the same as]|[=]=) %objects% [each|respectively]
  * @since ALPHA
  */
+@Getter // Skript+: Added getter
 public class CondExprCompare extends ConditionalExpression {
     public static final PatternInfos<Relation> PATTERNS = new PatternInfos<>(new Object[][]{
             {"[1:neither] %objects% [8:each] ((is|are)(2:(n't [8:each]|[8: each] not|4:[8: each] neither)| [8:each]) (greater|more|higher|bigger|larger|above) [than] or (equal to|the same as)|\\>=) %objects% [0x10:each|0x18:respectively]", Relation.GREATER_OR_EQUAL},

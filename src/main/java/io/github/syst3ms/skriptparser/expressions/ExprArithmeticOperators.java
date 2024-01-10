@@ -9,6 +9,7 @@ import io.github.syst3ms.skriptparser.parsing.ParseContext;
 import io.github.syst3ms.skriptparser.registration.PatternInfos;
 import io.github.syst3ms.skriptparser.util.DoubleOptional;
 import io.github.syst3ms.skriptparser.util.math.BigDecimalMath;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -61,7 +62,9 @@ public class ExprArithmeticOperators implements Expression<Number> {
         );
     }
 
+    @Getter
     private Expression<? extends Number> first, second;
+    @Getter
     private Operator op;
 
     @SuppressWarnings("unchecked")
@@ -97,7 +100,7 @@ public class ExprArithmeticOperators implements Expression<Number> {
         return first.toString(ctx, debug) + " " + op + " " + second.toString(ctx, debug);
     }
 
-    private enum Operator {
+    public enum Operator {
         PLUS('+') {
             @Override
             public Number calculate(Number left, Number right) {

@@ -8,6 +8,7 @@ import io.github.syst3ms.skriptparser.lang.TriggerContext;
 import io.github.syst3ms.skriptparser.log.ErrorType;
 import io.github.syst3ms.skriptparser.log.SkriptLogger;
 import io.github.syst3ms.skriptparser.parsing.ParseContext;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class SecConditional extends CodeSection {
 
     private ConditionalMode mode;
     @Nullable
+    @Getter // Skript+
     private Expression<Boolean> condition;
     @Nullable
     private SecConditional fallingClause;
