@@ -10,6 +10,7 @@ import io.github.syst3ms.skriptparser.registration.tags.TagManager;
 import io.github.syst3ms.skriptparser.types.TypeManager;
 import io.github.syst3ms.skriptparser.util.CollectionUtils;
 import io.github.syst3ms.skriptparser.util.StringUtils;
+import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class VariableString extends TaggedExpression {
      * An array containing raw data for this {@link VariableString}.
      * Contains {@link String} and {@link Expression} elements
      */
+    @Getter
     private final Object[] data;
     private final boolean simple;
 
