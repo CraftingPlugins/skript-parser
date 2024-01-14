@@ -14,6 +14,7 @@ import io.github.syst3ms.skriptparser.util.ClassUtils;
 import io.github.syst3ms.skriptparser.util.Pair;
 import io.github.syst3ms.skriptparser.util.math.NumberMath;
 import io.github.syst3ms.skriptparser.variables.Variables;
+import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +33,7 @@ import java.util.TreeMap;
  * defined outside of the event it was first defined in. It can also be a list of multiple values. It can also be both.
  * @param <T> the common supertype of the possibly multiple values of the variable
  */
+@Getter
 @SuppressWarnings("unchecked")
 public class Variable<T> implements Expression<T> {
     private final VariableString name;

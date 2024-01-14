@@ -9,6 +9,7 @@ import io.github.syst3ms.skriptparser.parsing.ParseContext;
 import io.github.syst3ms.skriptparser.registration.PatternInfos;
 import io.github.syst3ms.skriptparser.types.TypeManager;
 import io.github.syst3ms.skriptparser.types.changers.ChangeMode;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
  * @since ALPHA
  * @author Syst3ms
  */
+@Getter
 public class EffChange extends Effect {
     public static final PatternInfos<ChangeMode> PATTERNS = new PatternInfos<>(new Object[][]{
             {"set %~objects% to %objects%", ChangeMode.SET},
