@@ -181,6 +181,12 @@ public class VariableString extends TaggedExpression {
         return String.class;
     }
 
+    public String toSimpleString() {
+        if (simple)
+            return (String) data[0];
+        throw new IllegalStateException("Cannot convert a complex VariableString to a simple string");
+    }
+
     public String toString(TriggerContext ctx) {
         return toString(ctx, "default");
     }
