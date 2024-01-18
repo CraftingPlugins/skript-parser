@@ -9,6 +9,7 @@ import io.github.syst3ms.skriptparser.log.ErrorType;
 import io.github.syst3ms.skriptparser.log.SkriptLogger;
 import io.github.syst3ms.skriptparser.parsing.ParseContext;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -39,6 +40,7 @@ public class SecConditional extends CodeSection {
         );
     }
 
+    @Setter
     private ConditionalMode mode;
     @Nullable
     @Getter // Skript+
@@ -133,6 +135,11 @@ public class SecConditional extends CodeSection {
      */
     public ConditionalMode getMode() {
         return mode;
+    }
+
+    @Override
+    public String toString() {
+        return mode + (condition != null ? " " + condition.toString() : "");
     }
 
     public enum ConditionalMode {
