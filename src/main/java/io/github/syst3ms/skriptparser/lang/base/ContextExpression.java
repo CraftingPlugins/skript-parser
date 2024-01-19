@@ -4,6 +4,7 @@ import io.github.syst3ms.skriptparser.lang.Expression;
 import io.github.syst3ms.skriptparser.lang.TriggerContext;
 import io.github.syst3ms.skriptparser.parsing.ParseContext;
 import io.github.syst3ms.skriptparser.registration.context.ContextValue;
+import lombok.Getter;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.Contract;
  * @param <T> the Expression's type
  * @author Mwexim
  */
+@Getter
 public class ContextExpression<C extends TriggerContext, T> implements Expression<T> {
 	private final ContextValue<C, T> info;
 	private final String value;
