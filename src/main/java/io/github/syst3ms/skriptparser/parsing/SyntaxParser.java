@@ -364,6 +364,7 @@ public class SyntaxParser {
                     )) {
                         continue;
                     }
+                    System.out.println(expression.getClass().getName());
                     logger.setContext(ErrorContext.CONSTRAINT_CHECKING);
                     Class<?> expressionReturnType = expression.getReturnType();
                     if (!expectedTypeClass.isAssignableFrom(expressionReturnType)) { // Would only screw up in case of bad dynamic type usage

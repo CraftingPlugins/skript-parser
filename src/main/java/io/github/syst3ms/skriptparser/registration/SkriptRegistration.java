@@ -826,6 +826,7 @@ public class SkriptRegistration {
         private final Function<C, T[]> function;
         private State state = State.PRESENT;
         private Usage usage = Usage.EXPRESSION_ONLY;
+        private ContextValue.ToExpr toExpr = null;
 
         @SuppressWarnings("unchecked")
         private Class<? extends C>[] excluded = new Class[0];
@@ -854,6 +855,11 @@ public class SkriptRegistration {
             return this;
         }
 
+        public ContextValueRegistrar<C, T> setToExpr(ContextValue.ToExpr toExpr) {
+            this.toExpr = toExpr;
+            return this;
+        }
+
         @Override
         public void register() {
             var pattern = PatternParser.parsePattern(this.pattern, logger);
@@ -867,7 +873,7 @@ public class SkriptRegistration {
             }
 
             // Register the context value
-            contextValues.add(new ContextValue<>(context, type.get(), isSingle, pattern.get(), function, state, usage, excluded));
+            contextValues.add(new ContextValue<>(context, type.get(), isSingle, pattern.get(), function, state, usage, excluded, toExpr));
         }
     }
 

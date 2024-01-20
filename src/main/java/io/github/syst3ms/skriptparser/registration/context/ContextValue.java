@@ -1,9 +1,13 @@
 package io.github.syst3ms.skriptparser.registration.context;
 
 import io.github.syst3ms.skriptparser.lang.TriggerContext;
+import io.github.syst3ms.skriptparser.lang.base.ContextExpression;
 import io.github.syst3ms.skriptparser.pattern.PatternElement;
 import io.github.syst3ms.skriptparser.types.PatternType;
 import io.github.syst3ms.skriptparser.types.Type;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mapleir.ir.code.Expr;
 
 import java.util.function.Function;
 
@@ -20,6 +24,7 @@ public class ContextValue<C extends TriggerContext, T> {
     private final Usage usage;
 
     private final Class<? extends C>[] excluded;
+	private final ToExpr toExpr;
 
 	@SuppressWarnings("unchecked")
 	public ContextValue(Class<C> context,
@@ -27,7 +32,7 @@ public class ContextValue<C extends TriggerContext, T> {
 						PatternElement pattern,
 						Function<C, T[]> function,
 						State state, Usage usage) {
-		this(context, returnType, isSingle, pattern, function, state, usage, new Class[0]);
+		this(context, returnType, isSingle, pattern, function, state, usage, new Class[0], null);
 	}
 
 	public ContextValue(Class<C> context,
@@ -35,7 +40,8 @@ public class ContextValue<C extends TriggerContext, T> {
 						PatternElement pattern,
 						Function<C, T[]> function,
 						State state, Usage usage,
-						Class<? extends C>[] excluded) {
+						Class<? extends C>[] excluded,
+						@Nullable ToExpr toExpr) {
         this.context = context;
         this.returnType = new PatternType<>(returnType, isSingle);
         this.pattern = pattern;
@@ -43,6 +49,7 @@ public class ContextValue<C extends TriggerContext, T> {
         this.state = state;
         this.usage = usage;
         this.excluded = excluded;
+		this.toExpr = toExpr;
     }
 
     public Class<C> getContext() {
@@ -97,6 +104,10 @@ public class ContextValue<C extends TriggerContext, T> {
 		return excluded;
 	}
 
+	public @Nullable ToExpr getToExpr() {
+		return toExpr;
+	}
+
 	/**
 	 * An enum to indicate the relative position in time between two similar context values.
 	 * Note that this is just to <b>indicate</b> time difference. There isn't a different treatment
@@ -140,4 +151,9 @@ public class ContextValue<C extends TriggerContext, T> {
             return alone && this != EXPRESSION_ONLY || !alone && this != ALONE_ONLY;
         }
     }
+
+	// Skript+
+	public interface ToExpr {
+		@NotNull Expr convert(@NotNull ContextExpression<?, ?> expression);
+	}
 }
