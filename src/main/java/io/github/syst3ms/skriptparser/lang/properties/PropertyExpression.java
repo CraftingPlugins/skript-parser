@@ -45,7 +45,6 @@ public abstract class PropertyExpression<T, O> implements Expression<T> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, ParseContext parseContext) {
-        System.out.println("PropertyExpression.init");
         setOwner((Expression<O>) expressions[0]);
         genitive = matchedPattern == 0;
         return true;
