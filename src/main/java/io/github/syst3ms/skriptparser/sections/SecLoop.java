@@ -16,6 +16,7 @@ import io.github.syst3ms.skriptparser.log.SkriptLogger;
 import io.github.syst3ms.skriptparser.parsing.ParseContext;
 import io.github.syst3ms.skriptparser.parsing.ParserState;
 import io.github.syst3ms.skriptparser.types.ranges.Ranges;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigInteger;
@@ -34,6 +35,7 @@ import java.util.Optional;
  * @since ALPHA
  * @author Mwexim
  */
+@Getter
 public class SecLoop extends ArgumentSection implements Continuable, SelfReferencing {
 	static {
 		Parser.getMainRegistration().addSection(
