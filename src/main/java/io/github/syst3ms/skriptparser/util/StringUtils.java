@@ -3,10 +3,13 @@ package io.github.syst3ms.skriptparser.util;
 import io.github.syst3ms.skriptparser.log.ErrorType;
 import io.github.syst3ms.skriptparser.log.SkriptLogger;
 import io.github.syst3ms.skriptparser.parsing.SkriptParserException;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -14,6 +17,29 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
     public static final Pattern R_LITERAL_CONTENT_PATTERN = Pattern.compile("(.+?)\\((.+)\\)\\1"); // It's actually rare to be able to use '.+' raw like this
+
+    /**
+     * Performs regex replacing using a callback.
+     *
+     * @param string the String in which should be searched & replaced
+     * @param regex the Regex to match
+     * @param callback the callback will be run for every match of the regex in the string, and should return the replacement string for the given match.
+     *            If the callback returns null for any given match this function will immediately terminate and return null.
+     * @return
+     */
+    @Nullable
+    public static String replaceAll(final CharSequence string, final Pattern regex, final Function<Matcher, String> callback) {
+        final Matcher m = regex.matcher(string);
+        final StringBuilder sb = new StringBuilder();
+        while (m.find()) {
+            final String r = callback.apply(m);
+            if (r == null)
+                return null;
+            m.appendReplacement(sb, r);
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
 
     /**
      * Counts combined occurrences of one or more strings in another

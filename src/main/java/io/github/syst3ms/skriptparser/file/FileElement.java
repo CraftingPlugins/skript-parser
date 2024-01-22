@@ -30,6 +30,23 @@ public class FileElement {
         return content;
     }
 
+    public boolean isEntry() {
+        return content.contains(EntryElement.SEPARATOR);
+    }
+
+    public EntryElement asEntry() {
+        var split = content.split(EntryElement.SEPARATOR, 2);
+        if (split.length != 2)
+            throw new IllegalStateException("This line is not an entry");
+
+        return new EntryElement(
+                fileName,
+                line,
+                split[0].trim(),
+                split[1].trim(),
+                indentation);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
