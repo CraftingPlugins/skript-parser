@@ -12,6 +12,7 @@ import io.github.syst3ms.skriptparser.types.TypeManager;
 import io.github.syst3ms.skriptparser.types.conversions.Converters;
 import io.github.syst3ms.skriptparser.util.ClassUtils;
 import io.github.syst3ms.skriptparser.util.Pair;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Array;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
  * @since ALPHA
  * @author Syst3ms
  */
+@Getter
 public class ExprLoopValue extends SectionValue<SecLoop, Object> {
 	static {
 		Parser.getMainRegistration().addExpression(
