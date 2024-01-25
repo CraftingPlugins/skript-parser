@@ -1,10 +1,9 @@
 package io.github.syst3ms.skriptparser.parsing;
 
-import io.github.syst3ms.skriptparser.lang.CodeSection;
-import io.github.syst3ms.skriptparser.lang.Statement;
-import io.github.syst3ms.skriptparser.lang.SyntaxElement;
-import io.github.syst3ms.skriptparser.lang.TriggerContext;
+import io.github.syst3ms.skriptparser.lang.*;
 import io.github.syst3ms.skriptparser.util.Pair;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -19,6 +18,9 @@ public class ParserState {
     private final LinkedList<CodeSection> currentSections = new LinkedList<>();
     private final LinkedList<LinkedList<Statement>> currentStatements = new LinkedList<>();
     private final LinkedList<Pair<Set<Class<? extends SyntaxElement>>, Boolean>> restrictions = new LinkedList<>();
+    @Getter
+    @Setter
+    private SkriptEvent currentEvent;
 
     {
         currentStatements.add(new LinkedList<>());

@@ -28,7 +28,7 @@ public class ScriptLoader {
 
     /**
      * Parses and loads the provided script in memory.
-     * 
+     *
      * @param scriptPath the script file to load.
      * @param debug whether debug is enabled.
      */
@@ -39,7 +39,7 @@ public class ScriptLoader {
     /**
      * Parses and loads the provided script in memory.
      * The provided SkriptLogger can be used within syntaxes to input erroring into the logs during parse time.
-     * 
+     *
      * @param scriptPath the script file to load.
      * @param logger The {@link SkriptLogger} to use for the logged entries. Useful for custom logging.
      * @param debug whether debug is enabled.
@@ -87,7 +87,8 @@ public class ScriptLoader {
             logger.finalizeLogs();
             logger.setLine(unloaded.getLine());
             var loaded = unloaded.getTrigger();
-            loaded.loadSection(unloaded.getSection(), unloaded.getParserState(), logger);
+            ParserState state = unloaded.getParserState();
+            loaded.loadSection(unloaded.getSection(), state, logger);
             unloaded.getEventInfo().getRegisterer().handleTrigger(loaded);
             triggerMap.putOne(scriptName, loaded);
         }

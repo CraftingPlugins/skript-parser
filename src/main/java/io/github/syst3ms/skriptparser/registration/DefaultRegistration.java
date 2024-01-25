@@ -327,6 +327,8 @@ public class DefaultRegistration {
 
         registration.addConverter(SkriptDate.class, Time.class, da -> Optional.of(Time.of(da)));
 
+        registration.addConverter(Object.class, String.class, o -> Optional.ofNullable(o == null ? null : o.toString()));
+
         registration.register(true); // Ignoring logs here, we control the input
     }
 }

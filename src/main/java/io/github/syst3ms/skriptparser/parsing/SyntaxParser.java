@@ -712,6 +712,7 @@ public class SyntaxParser {
                             .getDeclaredConstructor()
                             .newInstance();
                     logger.setContext(ErrorContext.INITIALIZATION);
+                    parserState.setCurrentEvent(event);
                     if (!event.init(
                             parser.getParsedExpressions().toArray(new Expression[0]),
                             i,
