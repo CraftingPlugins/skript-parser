@@ -42,7 +42,7 @@ public class DefaultRegistration {
                 "object@s"
         );
 
-        registration.newType(Number.class,"number", "number@s")
+        registration.newType(Number.class, "number", "number@s")
                 .literalParser(s -> {
                     if (s.startsWith("_") || s.endsWith("_"))
                         return null;
@@ -324,6 +324,9 @@ public class DefaultRegistration {
                 return Optional.of(BigInteger.valueOf(n.longValue()));
             }
         });
+
+        registration.addConverter(BigInteger.class, Number.class, n -> Optional.of(n.longValue()));
+        registration.addConverter(BigInteger.class, int.class, n -> Optional.of(n.intValue()));
 
         registration.addConverter(SkriptDate.class, Time.class, da -> Optional.of(Time.of(da)));
 
