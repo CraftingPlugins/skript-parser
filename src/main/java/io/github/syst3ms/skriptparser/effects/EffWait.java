@@ -9,6 +9,7 @@ import io.github.syst3ms.skriptparser.lang.TriggerContext;
 import io.github.syst3ms.skriptparser.parsing.ParseContext;
 import io.github.syst3ms.skriptparser.util.DurationUtils;
 import io.github.syst3ms.skriptparser.util.ThreadUtils;
+import lombok.Getter;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import java.util.function.Consumer;
  * @since ALPHA
  * @author Mwexim
  */
+@Getter
 public class EffWait extends Effect {
     static {
         Parser.getMainRegistration().addEffect(

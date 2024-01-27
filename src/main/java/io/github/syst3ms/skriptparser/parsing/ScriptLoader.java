@@ -5,13 +5,12 @@ import io.github.syst3ms.skriptparser.file.FileParser;
 import io.github.syst3ms.skriptparser.file.FileSection;
 import io.github.syst3ms.skriptparser.file.VoidElement;
 import io.github.syst3ms.skriptparser.lang.Statement;
-import io.github.syst3ms.skriptparser.lang.Trigger;
-import io.github.syst3ms.skriptparser.lang.UnloadedTrigger;
 import io.github.syst3ms.skriptparser.log.ErrorType;
 import io.github.syst3ms.skriptparser.log.LogEntry;
 import io.github.syst3ms.skriptparser.log.SkriptLogger;
+import io.github.syst3ms.skriptparser.structures.StructureLoader;
+import io.github.syst3ms.skriptparser.structures.StructureTypeRegistry;
 import io.github.syst3ms.skriptparser.util.FileUtils;
-import io.github.syst3ms.skriptparser.util.MultiMap;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -23,8 +22,6 @@ import java.util.List;
  * Contains the logic for loading, parsing and interpreting entire script files
  */
 public class ScriptLoader {
-
-    private static final MultiMap<String, Trigger> triggerMap = new MultiMap<>();
 
     /**
      * Parses and loads the provided script in memory.
@@ -62,18 +59,15 @@ public class ScriptLoader {
             return Collections.emptyList();
         }
         logger.setFileInfo(scriptPath.getFileName().toString(), elements);
-        List<UnloadedTrigger> unloadedTriggers = new ArrayList<>();
+
+        StructureLoader structureLoader = StructureTypeRegistry.createLoader();
         for (var element : elements) {
             logger.finalizeLogs();
             logger.nextLine();
             if (element instanceof VoidElement)
                 continue;
-            if (element instanceof FileSection) {
-                var trig = SyntaxParser.parseTrigger((FileSection) element, logger);
-                trig.ifPresent(t -> {
-                    logger.setLine(logger.getLine() + ((FileSection) element).length());
-                    unloadedTriggers.add(t);
-                });
+            if (element instanceof FileSection fileSection) {
+                structureLoader.parse(scriptName, fileSection, logger);
             } else {
                 logger.error(
                         "Can't have code outside of a trigger",
@@ -82,16 +76,9 @@ public class ScriptLoader {
                 );
             }
         }
-        unloadedTriggers.sort((a, b) -> b.getTrigger().getEvent().getLoadingPriority() - a.getTrigger().getEvent().getLoadingPriority());
-        for (var unloaded : unloadedTriggers) {
-            logger.finalizeLogs();
-            logger.setLine(unloaded.getLine());
-            var loaded = unloaded.getTrigger();
-            ParserState state = unloaded.getParserState();
-            loaded.loadSection(unloaded.getSection(), state, logger);
-            unloaded.getEventInfo().getRegisterer().handleTrigger(loaded);
-            triggerMap.putOne(scriptName, loaded);
-        }
+
+        structureLoader.loadAll(scriptName, logger);
+
         logger.finalizeLogs();
         return logger.close();
     }
@@ -138,7 +125,4 @@ public class ScriptLoader {
         return items;
     }
 
-    public static MultiMap<String, Trigger> getTriggerMap() {
-        return triggerMap;
-    }
 }

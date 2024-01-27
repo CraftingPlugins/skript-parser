@@ -4,6 +4,7 @@ import io.github.syst3ms.skriptparser.file.FileSection;
 import io.github.syst3ms.skriptparser.log.SkriptLogger;
 import io.github.syst3ms.skriptparser.parsing.ParseContext;
 import io.github.syst3ms.skriptparser.parsing.ParserState;
+import io.github.syst3ms.skriptparser.structures.Structure;
 
 import java.util.Optional;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
  * A top-level section, that is not contained in code.
  * Usually declares an event.
  */
-public class Trigger extends CodeSection {
+public class Trigger extends CodeSection implements Structure {
     private final SkriptEvent event;
 
     public Trigger(SkriptEvent event) {
