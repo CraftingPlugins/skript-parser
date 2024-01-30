@@ -9,12 +9,13 @@ import lombok.Getter;
 public class EntryElement extends FileElement {
 
     public static final String SEPARATOR = ":";
+    public static final String ALIASES_SEPARATOR = ":";
 
     private final String key;
     private final String value;
 
-    public EntryElement(String fileName, int line, String key, String value, int indentation) {
-        super(fileName, line, key + ": " + value, indentation);
+    public EntryElement(String fileName, int line, String key, String value, String content, int indentation) {
+        super(fileName, line, content, indentation);
         this.key = key;
         this.value = value;
     }

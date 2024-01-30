@@ -31,11 +31,19 @@ public class FileElement {
     }
 
     public boolean isEntry() {
-        return content.contains(EntryElement.SEPARATOR);
+        return isEntry(EntryElement.SEPARATOR);
+    }
+
+    public boolean isEntry(String separator) {
+        return content.contains(separator);
     }
 
     public EntryElement asEntry() {
-        var split = content.split(EntryElement.SEPARATOR, 2);
+        return asEntry(EntryElement.SEPARATOR);
+    }
+
+    public EntryElement asEntry(String separator) {
+        var split = content.split(separator, 2);
         if (split.length != 2)
             throw new IllegalStateException("This line is not an entry");
 
@@ -44,6 +52,7 @@ public class FileElement {
                 line,
                 split[0].trim(),
                 split[1].trim(),
+                content,
                 indentation);
     }
 
