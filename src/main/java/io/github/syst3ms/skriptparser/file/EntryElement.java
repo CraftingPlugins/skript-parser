@@ -9,7 +9,7 @@ import lombok.Getter;
 public class EntryElement extends FileElement {
 
     public static final String SEPARATOR = ":";
-    public static final String ALIASES_SEPARATOR = ":";
+    public static final String ALIASES_SEPARATOR = "=";
 
     private final String key;
     private final String value;

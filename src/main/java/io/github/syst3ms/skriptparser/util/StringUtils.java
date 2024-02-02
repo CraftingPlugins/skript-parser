@@ -326,6 +326,16 @@ public class StringUtils {
         }
     }
 
+    public static String stripeIndefiniteArticle(String noun) {
+        noun = noun.strip();
+        if (noun.isEmpty())
+            return "";
+        if (noun.startsWith("a ") || noun.startsWith("an ")) {
+            return noun.substring(noun.indexOf(' ') + 1);
+        }
+        return noun;
+    }
+
     /**
      * Capitalizes the first word or all words in a string.
      * A word is separated by a space character.
@@ -424,5 +434,22 @@ public class StringUtils {
             ret[i] = chars[chars.length - i - 1];
         }
         return new String(ret);
+    }
+
+    public static int indexOfOutsideGroup(String string, char find, char groupOpen, char groupClose, int i) {
+        int group = 0;
+        for (; i < string.length(); i++) {
+            char c = string.charAt(i);
+            if (c == '\\') {
+                i++;
+            } else if (c == groupOpen) {
+                group++;
+            } else if (c == groupClose) {
+                group--;
+            } else if (c == find && group == 0) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

@@ -862,18 +862,25 @@ public class SkriptRegistration {
 
         @Override
         public void register() {
+            registerValue();
+        }
+
+        public ContextValue<C, T> registerValue() {
             var pattern = PatternParser.parsePattern(this.pattern, logger);
             if (pattern.isEmpty())
-                return;
+                return null;
 
             var type = TypeManager.getByClassExact(returnType);
             if (type.isEmpty()) {
                 logger.error("Couldn't find a type corresponding to the class '" + returnType.getName() + "'", ErrorType.NO_MATCH);
-                return;
+                return null;
             }
 
             // Register the context value
-            contextValues.add(new ContextValue<>(context, type.get(), isSingle, pattern.get(), function, state, usage, excluded, toExpr));
+            ContextValue<C, T> contextValue = new ContextValue<>(context, type.get(), isSingle, pattern.get(), function, state, usage, excluded, toExpr);
+            contextValues.add(contextValue);
+
+            return contextValue;
         }
     }
 
