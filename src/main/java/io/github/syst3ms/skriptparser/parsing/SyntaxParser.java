@@ -345,8 +345,9 @@ public class SyntaxParser {
         var infoType = info.getReturnType();
         var infoTypeClass = infoType.getType().getTypeClass();
         var expectedTypeClass = expectedType.getType().getTypeClass();
-        if (!expectedTypeClass.isAssignableFrom(infoTypeClass) && !Converters.converterExists(infoTypeClass, expectedTypeClass))
+        if (!expectedTypeClass.isAssignableFrom(infoTypeClass) && !Converters.converterExists(infoTypeClass, expectedTypeClass)) {
             return Optional.empty();
+        }
         for (var i = 0; i < patterns.size(); i++) {
             var element = patterns.get(i);
             logger.setContext(ErrorContext.MATCHING);
