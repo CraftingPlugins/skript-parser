@@ -24,7 +24,7 @@ public class Type<T> {
     @Nullable
     private final Changer<? super T> defaultChanger;
     @Nullable
-    private final Arithmetic<T, ?> arithmetic;
+    private final Arithmetic<? extends T, ?> arithmetic;
 
     /**
      * Constructs a new Type.
@@ -103,7 +103,7 @@ public class Type<T> {
                 @Nullable Function<String, ? extends T> literalParser,
                 Function<? super T, String> toStringFunction,
                 @Nullable Changer<? super T> defaultChanger,
-                @Nullable Arithmetic<T, ?> arithmetic) {
+                @Nullable Arithmetic<? extends T, ?> arithmetic) {
         this.typeClass = typeClass;
         this.baseName = baseName;
         this.literalParser = literalParser;
@@ -137,7 +137,7 @@ public class Type<T> {
         return Optional.ofNullable(defaultChanger);
     }
 
-    public Optional<? extends Arithmetic<T, ?>> getArithmetic() {
+    public Optional<? extends Arithmetic<? extends T, ?>> getArithmetic() {
         return Optional.ofNullable(arithmetic);
     }
 

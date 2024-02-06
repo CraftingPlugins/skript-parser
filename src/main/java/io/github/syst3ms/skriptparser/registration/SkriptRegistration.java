@@ -616,7 +616,7 @@ public class SkriptRegistration {
         @Nullable
         private Changer<? super C> defaultChanger;
         @Nullable
-        private Arithmetic<C, ?> arithmetic;
+        private Arithmetic<? extends C, ?> arithmetic;
 
         public TypeRegistrar(Class<C> c, String baseName, String pattern) {
             this.c = c;
@@ -656,6 +656,12 @@ public class SkriptRegistration {
          * @return the registrar
          */
         public <R> TypeRegistrar<C> arithmetic(Arithmetic<C, R> arithmetic) {
+            this.arithmetic = arithmetic;
+            return this;
+        }
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        public TypeRegistrar<C> arithmetic0(Arithmetic arithmetic) {
             this.arithmetic = arithmetic;
             return this;
         }
