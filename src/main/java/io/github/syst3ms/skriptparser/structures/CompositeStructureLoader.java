@@ -29,9 +29,23 @@ public class CompositeStructureLoader implements StructureLoader {
     }
 
     @Override
+    public void preloadAll(@NotNull String script, @NotNull SkriptLogger logger) {
+        for (StructureLoader loader : loaders) {
+            loader.preloadAll(script, logger);
+        }
+    }
+
+    @Override
     public void loadAll(@NotNull String script, @NotNull SkriptLogger logger) {
         for (StructureLoader loader : loaders) {
             loader.loadAll(script, logger);
+        }
+    }
+
+    @Override
+    public void postLoadAll(@NotNull String script, @NotNull SkriptLogger logger) {
+        for (StructureLoader loader : loaders) {
+            loader.postLoadAll(script, logger);
         }
     }
 }

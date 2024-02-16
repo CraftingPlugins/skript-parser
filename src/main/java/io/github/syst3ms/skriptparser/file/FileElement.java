@@ -1,5 +1,7 @@
 package io.github.syst3ms.skriptparser.file;
 
+import io.github.syst3ms.skriptparser.structures.options.OptionsStructure;
+
 /**
  * Represents any non-blank and not comment-only line in a file. It is important to note that information about comments
  * is absent from this class, as they are discarded before being passed to the constructor.<br>
@@ -27,7 +29,7 @@ public class FileElement {
      * @return the text content of this line, excluding any indentation.
      */
     public String getLineContent() {
-        return content;
+        return OptionsStructure.replaceCurrentOptions(content);
     }
 
     public boolean isEntry() {

@@ -67,7 +67,13 @@ public class ScriptLoader {
             if (element instanceof VoidElement)
                 continue;
             if (element instanceof FileSection fileSection) {
-                structureLoader.parse(scriptName, fileSection, logger);
+                boolean parsed = structureLoader.parse(scriptName, fileSection, logger);
+                if (!parsed) {
+                    logger.error(
+                            "Unknown section: " + element.getLineContent(),
+                            ErrorType.STRUCTURE_ERROR
+                    );
+                }
             } else {
                 logger.error(
                         "Can't have code outside of a trigger",
@@ -77,7 +83,12 @@ public class ScriptLoader {
             }
         }
 
-        structureLoader.loadAll(scriptName, logger);
+        structureLoader.preloadAll(scriptName, logger);
+        try {
+            structureLoader.loadAll(scriptName, logger);
+        } finally {
+            structureLoader.postLoadAll(scriptName, logger);
+        }
 
         logger.finalizeLogs();
         return logger.close();

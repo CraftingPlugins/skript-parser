@@ -358,12 +358,17 @@ public class SyntaxParser {
                             .getDeclaredConstructor()
                             .newInstance();
                     logger.setContext(ErrorContext.INITIALIZATION);
-                    if (!expression.init(
-                            parser.getParsedExpressions().toArray(new Expression[0]),
-                            i,
-                            parser.toParseResult()
-                    )) {
-                        continue;
+                    try {
+                        if (!expression.init(
+                                parser.getParsedExpressions().toArray(new Expression[0]),
+                                i,
+                                parser.toParseResult()
+                        )) {
+                            continue;
+                        }
+                    } catch (Throwable throwable) {
+                        logger.error("An error occurred while initializing the expression: " + throwable.getMessage(), ErrorType.EXCEPTION);
+                        return Optional.empty();
                     }
                     logger.setContext(ErrorContext.CONSTRAINT_CHECKING);
                     Class<?> expressionReturnType = expression.getReturnType();
@@ -695,8 +700,6 @@ public class SyntaxParser {
             logger.forgetError();
         }
 
-        logger.setContext(ErrorContext.NO_MATCH);
-        logger.error("No trigger matching '" + section.getLineContent() + "' was found", ErrorType.NO_MATCH);
         return Optional.empty();
     }
 

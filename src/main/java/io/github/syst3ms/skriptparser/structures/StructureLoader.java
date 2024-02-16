@@ -16,10 +16,32 @@ public interface StructureLoader {
     boolean parse(@NotNull String script, @NotNull FileSection section, @NotNull SkriptLogger logger);
 
     /**
+     * Preloads all the structures of this type
+     *
+     * @param script the name of the script
+     * @param logger the logger to log errors to
+     */
+    default void preloadAll(@NotNull String script, @NotNull SkriptLogger logger) {
+        // to be overridden
+    }
+
+    /**
      * Loads all the structures of this type
      *
      * @param logger the logger to log errors to
      */
-    void loadAll(@NotNull String script, @NotNull SkriptLogger logger);
+    default void loadAll(@NotNull String script, @NotNull SkriptLogger logger) {
+        // to be overridden
+    }
+
+    /**
+     * Post-loads all the structures of this type
+     *
+     * @param script the name of the script
+     * @param logger the logger to log errors to
+     */
+    default void postLoadAll(@NotNull String script, @NotNull SkriptLogger logger) {
+        // to be overridden
+    }
 
 }
