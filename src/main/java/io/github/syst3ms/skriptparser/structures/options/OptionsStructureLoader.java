@@ -18,6 +18,9 @@ public class OptionsStructureLoader implements StructureLoader {
 
     @Override
     public boolean parse(@NotNull String script, @NotNull FileSection section, @NotNull SkriptLogger logger) {
+        if (!section.getLineContent().equals("options"))
+            return false;
+
         if (this.structure == null) {
             this.structure = new OptionsStructure();
             this.structureType.addStructure(script, this.structure);
