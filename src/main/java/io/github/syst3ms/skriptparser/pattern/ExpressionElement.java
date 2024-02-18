@@ -4,6 +4,7 @@ import io.github.syst3ms.skriptparser.lang.Expression;
 import io.github.syst3ms.skriptparser.lang.Literal;
 import io.github.syst3ms.skriptparser.lang.Variable;
 import io.github.syst3ms.skriptparser.lang.base.ConditionalExpression;
+import io.github.syst3ms.skriptparser.lang.base.ConvertedExpression;
 import io.github.syst3ms.skriptparser.log.ErrorType;
 import io.github.syst3ms.skriptparser.log.SkriptLogger;
 import io.github.syst3ms.skriptparser.parsing.MatchContext;
@@ -209,6 +210,12 @@ public class ExpressionElement implements PatternElement {
                         break;
                     case LITERALS_ONLY:
                         if (!Literal.isLiteral(e)) {
+                            System.out.println(e.getClass());
+                            if (e instanceof ConvertedExpression convertedExpression) {
+                                convertedExpression.stackTrace.printStackTrace();
+                                System.out.println(convertedExpression.getSource().getClass());
+                                System.out.println(convertedExpression.getReturnType());
+                            }
                             logger.error("Only literals are allowed, found expression " + s, ErrorType.SEMANTIC_ERROR);
                             return false;
                         }

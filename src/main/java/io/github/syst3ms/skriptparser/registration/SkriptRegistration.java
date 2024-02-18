@@ -526,6 +526,10 @@ public class SkriptRegistration {
         newType(c, name, pattern).register();
     }
 
+    public <F, T> void addConverterUnboxed(Class<F> from, Class<T> to, Function<? super F, ? extends T> converter) {
+        addConverter(from, to, f -> Optional.ofNullable(converter.apply(f)));
+    }
+
     /**
      * Registers a converter
      * @param from the class it converts from
@@ -629,6 +633,11 @@ public class SkriptRegistration {
          * @return the registrar
          */
         public TypeRegistrar<C> literalParser(Function<String, ? extends C> literalParser) {
+            this.literalParser = literalParser;
+            return this;
+        }
+
+        public TypeRegistrar<C> literalParserInternal(Function<String, C> literalParser) {
             this.literalParser = literalParser;
             return this;
         }

@@ -21,6 +21,7 @@ import java.util.function.Function;
  * @see Converters
  */
 public class ConvertedExpression<F, T> implements Expression<T> {
+    public final Throwable stackTrace = new Throwable();
     private final Expression<? extends F> source;
     private final Class<T> to;
     private final Function<? super F, Optional<? extends T>> converter;

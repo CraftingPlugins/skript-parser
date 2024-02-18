@@ -32,6 +32,7 @@ public class OptionsStructureLoader implements StructureLoader {
 
     private void loadOptions(SkriptLogger logger, FileSection section, String prefix, OptionsStructure structure) {
         for (FileElement element : section.getElements()) {
+            logger.nextLine();
             if (element instanceof VoidElement)
                 return;
 

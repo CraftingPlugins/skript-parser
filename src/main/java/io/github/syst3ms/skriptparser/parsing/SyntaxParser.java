@@ -340,6 +340,9 @@ public class SyntaxParser {
         return Optional.empty();
     }
 
+    public static String s2;
+    public static String s;
+
     private static <T> Optional<? extends Expression<? extends T>> matchExpressionInfo(String s, ExpressionInfo<?, ?> info, PatternType<T> expectedType, ParserState parserState, SkriptLogger logger) {
         var patterns = info.getPatterns();
         var infoType = info.getReturnType();
@@ -353,6 +356,9 @@ public class SyntaxParser {
             logger.setContext(ErrorContext.MATCHING);
             var parser = new MatchContext(element, parserState, logger);
             if (element.match(s, 0, parser) == s.length()) {
+                if (SyntaxParser.s != null)
+                    System.out.println("previous s: " + SyntaxParser.s + " now: " + s);
+                SyntaxParser.s = s;
                 try {
                     var expression = (Expression<? extends T>) info.getSyntaxClass()
                             .getDeclaredConstructor()
@@ -368,6 +374,7 @@ public class SyntaxParser {
                         }
                     } catch (Throwable throwable) {
                         logger.error("An error occurred while initializing the expression: " + throwable.getMessage(), ErrorType.EXCEPTION);
+                        throwable.printStackTrace();
                         return Optional.empty();
                     }
                     logger.setContext(ErrorContext.CONSTRAINT_CHECKING);
