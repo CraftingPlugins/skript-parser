@@ -97,6 +97,7 @@ public class TagManager {
                 return Optional.of(tag);
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             logger.error("Couldn't instantiate class " + info.getSyntaxClass(), ErrorType.EXCEPTION);
+            e.printStackTrace();
         }
         return Optional.empty();
     }

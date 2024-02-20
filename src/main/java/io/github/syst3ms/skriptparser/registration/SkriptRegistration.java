@@ -53,6 +53,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -689,6 +690,7 @@ public class SkriptRegistration {
         protected final Class<C> c;
         protected final List<String> patterns = new ArrayList<>();
         protected int priority;
+        protected Supplier<C> instanceSupplier;
         protected final Map<String, Object> data = new HashMap<>();
 
         SyntaxRegistrar(Class<C> c, String... patterns) {
@@ -716,6 +718,11 @@ public class SkriptRegistration {
             if (priority < 0)
                 throw new SkriptParserException("Can't have a negative priority!");
             this.priority = priority;
+            return this;
+        }
+
+        public SyntaxRegistrar<C> setInstanceSupplier(Supplier<C> instanceSupplier) {
+            this.instanceSupplier = instanceSupplier;
             return this;
         }
 
@@ -777,7 +784,7 @@ public class SkriptRegistration {
          */
         @Override
         public void register() {
-            effects.add(new SyntaxInfo<>(registerer, super.c, priority, parsePatterns(), super.data));
+            effects.add(new SyntaxInfo<>(registerer, super.c, priority, parsePatterns(), super.data, super.instanceSupplier));
         }
     }
 
@@ -828,7 +835,7 @@ public class SkriptRegistration {
                     super.patterns.set(i, "[on] " + pattern);
                 }
             }
-            events.add(new SkriptEventInfo<>(registerer, super.c, handledContexts, priority, parsePatterns(), data));
+            events.add(new SkriptEventInfo<>(registerer, super.c, handledContexts, priority, parsePatterns(), data, instanceSupplier));
             registerer.addHandledEvent(this.c);
         }
     }

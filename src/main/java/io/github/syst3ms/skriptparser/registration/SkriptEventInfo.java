@@ -7,6 +7,7 @@ import io.github.syst3ms.skriptparser.pattern.PatternElement;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * A class containing info about an {@link SkriptEvent event} syntax
@@ -15,8 +16,26 @@ import java.util.Set;
 public class SkriptEventInfo<E extends SkriptEvent> extends SyntaxInfo<E> {
     private final Set<Class<? extends TriggerContext>> contexts;
 
-    public SkriptEventInfo(SkriptAddon registerer, Class<E> c, Set<Class<? extends TriggerContext>> handledContexts, int priority, List<PatternElement> patterns, Map<String, Object> data) {
+    public SkriptEventInfo(
+            SkriptAddon registerer,
+            Class<E> c,
+            Set<Class<? extends TriggerContext>> handledContexts,
+            int priority,
+            List<PatternElement> patterns,
+            Map<String, Object> data) {
         super(registerer, c, priority, patterns, data);
+        this.contexts = handledContexts;
+    }
+
+    public SkriptEventInfo(
+            SkriptAddon registerer,
+            Class<E> c,
+            Set<Class<? extends TriggerContext>> handledContexts,
+            int priority,
+            List<PatternElement> patterns,
+            Map<String, Object> data,
+            Supplier<E> syntaxSupplier) {
+        super(registerer, c, priority, patterns, data, syntaxSupplier);
         this.contexts = handledContexts;
     }
 
