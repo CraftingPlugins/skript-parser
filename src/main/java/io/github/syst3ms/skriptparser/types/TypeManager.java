@@ -2,10 +2,8 @@ package io.github.syst3ms.skriptparser.types;
 
 import io.github.syst3ms.skriptparser.registration.SkriptRegistration;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Manages the registration and usage of {@link Type}
@@ -105,12 +103,12 @@ public class TypeManager {
      */
     public static Optional<PatternType<?>> getPatternType(String name) {
         for (var t : nameToType.values()) {
-            var forms = t.getPluralForms();
-            if (name.equalsIgnoreCase(forms[0])) {
+            Pattern[] patterns = t.getPatterns();
+            if (patterns[0].matcher(name).matches())
                 return Optional.of(new PatternType<>(t, true));
-            } else if (name.equalsIgnoreCase(forms[1])) {
+
+            if (patterns[1].matcher(name).matches())
                 return Optional.of(new PatternType<>(t, false));
-            }
         }
         return Optional.empty();
     }

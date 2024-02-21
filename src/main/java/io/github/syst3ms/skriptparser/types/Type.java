@@ -3,21 +3,29 @@ package io.github.syst3ms.skriptparser.types;
 import io.github.syst3ms.skriptparser.types.changers.Arithmetic;
 import io.github.syst3ms.skriptparser.types.changers.Changer;
 import io.github.syst3ms.skriptparser.util.StringUtils;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * A basic definition of a type. This doesn't handle number (single/plural), unlike {@link PatternType}
  * @see PatternType
  */
 public class Type<T> {
+    @Getter
     private final Class<T> typeClass;
+    @Getter
     private final String baseName;
+    @Getter
     private final String[] pluralForms;
+    @Getter
+    private final Pattern[] patterns;
+    @Getter
     private final Function<Object, String> toStringFunction;
     @Nullable
     private final Function<String, ? extends T> literalParser;
@@ -109,24 +117,12 @@ public class Type<T> {
         this.literalParser = literalParser;
         this.toStringFunction = (Function<Object, String>) toStringFunction;
         this.pluralForms = StringUtils.getForms(pattern.strip());
+        this.patterns = new Pattern[pluralForms.length];
+        for (int i = 0; i < pluralForms.length; i++) {
+            patterns[i] = Pattern.compile(pluralForms[i], Pattern.CASE_INSENSITIVE);
+        }
         this.defaultChanger = defaultChanger;
         this.arithmetic = arithmetic;
-    }
-
-    public Class<T> getTypeClass() {
-        return typeClass;
-    }
-
-    public String getBaseName() {
-        return baseName;
-    }
-
-    public String[] getPluralForms() {
-        return pluralForms;
-    }
-
-    public Function<Object, String> getToStringFunction() {
-        return toStringFunction;
     }
 
     public Optional<Function<String, ? extends T>> getLiteralParser() {

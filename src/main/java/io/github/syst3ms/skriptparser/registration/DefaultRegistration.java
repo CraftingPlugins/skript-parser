@@ -144,7 +144,7 @@ public class DefaultRegistration {
         registration.addType(
                 String.class,
                 "string",
-                "string@s"
+                "^(string|text)@s"
         );
 
         registration.newType(Boolean.class, "boolean", "boolean@s")
