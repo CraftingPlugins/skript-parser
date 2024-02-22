@@ -79,7 +79,7 @@ public class EffChange extends Effect {
             if (changeTypes.isEmpty()) {
                 switch (mode) {
                     case SET:
-                        logger.error(changedString + " cannot be set to anything", ErrorType.SEMANTIC_ERROR);
+                        logger.error(changedString + " cannot be set to anything ", ErrorType.SEMANTIC_ERROR);
                         break;
                     case ADD:
                         logger.error("Nothing can be added to " + changedString, ErrorType.SEMANTIC_ERROR);

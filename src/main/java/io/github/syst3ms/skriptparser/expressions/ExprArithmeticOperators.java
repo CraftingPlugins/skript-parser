@@ -58,7 +58,7 @@ public class ExprArithmeticOperators implements Expression<Number> {
             ExprArithmeticOperators.class,
             Number.class,
             true,
-            3,
+            0,
             PATTERNS.getPatterns()
         );
     }
