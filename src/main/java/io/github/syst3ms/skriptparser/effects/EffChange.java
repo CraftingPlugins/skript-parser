@@ -12,6 +12,8 @@ import io.github.syst3ms.skriptparser.types.changers.ChangeMode;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 /**
  *  A very general effect that can change many expressions. Many expressions can only be set and/or deleted, while some can have things added to or removed from them.
  *
@@ -69,11 +71,12 @@ public class EffChange extends Effect {
         var logger = parseContext.getLogger();
         String changedString = changed.toString(TriggerContext.DUMMY, logger.isDebug());
 
+        Optional<Class<?>[]> changeTypes = changed.acceptsChange(mode);
         if (changeWith == null) {
             assert mode == ChangeMode.DELETE || mode == ChangeMode.RESET;
-            return changed.acceptsChange(mode).isPresent();
+            return changeTypes.isPresent();
         } else {
-            if (changed.acceptsChange(mode).isEmpty()) {
+            if (changeTypes.isEmpty()) {
                 switch (mode) {
                     case SET:
                         logger.error(changedString + " cannot be set to anything", ErrorType.SEMANTIC_ERROR);
