@@ -26,6 +26,7 @@ public class OptionsStructureLoader implements StructureLoader {
             this.structureType.addStructure(script, this.structure);
         }
 
+        logger.finalizeLogs();
         loadOptions(logger, section, "", structure);
         return true;
     }

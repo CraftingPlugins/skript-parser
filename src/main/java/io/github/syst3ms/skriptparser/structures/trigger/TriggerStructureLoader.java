@@ -22,6 +22,7 @@ public class TriggerStructureLoader implements StructureLoader {
         var optional = SyntaxParser.parseTrigger(section, logger);
         if (optional.isPresent()) {
             var trigger = optional.get();
+            logger.setLine(logger.getLine() + section.length());
 
             unloadedTriggers.add(trigger);
             return true;
