@@ -1,5 +1,6 @@
 package io.github.syst3ms.skriptparser.parsing;
 
+import io.github.syst3ms.skriptparser.expressions.ExprArithmeticOperators;
 import io.github.syst3ms.skriptparser.expressions.ExprBooleanOperators;
 import io.github.syst3ms.skriptparser.file.FileSection;
 import io.github.syst3ms.skriptparser.lang.*;
@@ -17,6 +18,10 @@ import io.github.syst3ms.skriptparser.registration.SyntaxManager;
 import io.github.syst3ms.skriptparser.registration.context.ContextValue;
 import io.github.syst3ms.skriptparser.registration.context.ContextValue.State;
 import io.github.syst3ms.skriptparser.registration.context.ContextValues;
+import io.github.syst3ms.skriptparser.trace.SyntaxStack;
+import io.github.syst3ms.skriptparser.trace.SyntaxStackLocal;
+import io.github.syst3ms.skriptparser.trace.impl.EffectSyntaxStack;
+import io.github.syst3ms.skriptparser.trace.impl.ExpressionSyntaxStack;
 import io.github.syst3ms.skriptparser.types.PatternType;
 import io.github.syst3ms.skriptparser.types.Type;
 import io.github.syst3ms.skriptparser.types.TypeManager;
@@ -27,7 +32,6 @@ import io.github.syst3ms.skriptparser.util.StringUtils;
 import io.github.syst3ms.skriptparser.variables.Variables;
 import org.intellij.lang.annotations.MagicConstant;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -160,18 +164,29 @@ public class SyntaxParser {
             }
         }
         for (var info : recentExpressions.mergeWith(SyntaxManager.getAllExpressions())) {
-            var expr = matchExpressionInfo(s, info, expectedType, parserState, logger);
-            if (expr.isPresent()) {
-                if (parserState.isRestrictingExpressions() && parserState.forbidsSyntax(expr.get().getClass())) {
-                    logger.setContext(ErrorContext.RESTRICTED_SYNTAXES);
-                    logger.error("The enclosing section does not allow the use of this expression: " + expr.get().toString(TriggerContext.DUMMY, logger.isDebug()), ErrorType.SEMANTIC_ERROR);
-                    return Optional.empty();
+            SyntaxStack previous = SyntaxStackLocal.getCurrent();
+            SyntaxStack stack = new ExpressionSyntaxStack(s, info, previous);
+
+            SyntaxStackLocal.push(stack);
+            try {
+                var expr = matchExpressionInfo(s, info, expectedType, parserState, logger);
+                if (expr.isPresent()) {
+                    if (parserState.isRestrictingExpressions() && parserState.forbidsSyntax(expr.get().getClass())) {
+                        logger.setContext(ErrorContext.RESTRICTED_SYNTAXES);
+                        logger.error("The enclosing section does not allow the use of this expression: " + expr.get().toString(TriggerContext.DUMMY, logger.isDebug()), ErrorType.SEMANTIC_ERROR);
+                        return Optional.empty();
+                    }
+                    recentExpressions.acknowledge(info);
+                    logger.clearErrors();
+                    return expr;
                 }
-                recentExpressions.acknowledge(info);
-                logger.clearErrors();
-                return expr;
+                logger.forgetError();
+            } finally {
+                if (previous != null)
+                    SyntaxStackLocal.push(previous);
+                else
+                    SyntaxStackLocal.pop();
             }
-            logger.forgetError();
         }
 
         // Parsing of standalone context values
@@ -562,18 +577,28 @@ public class SyntaxParser {
             return Optional.empty();
 
         for (var recentEffect : recentEffects.mergeWith(SyntaxManager.getEffects())) {
-            var eff = matchEffectInfo(s, recentEffect, parserState, logger);
-            if (eff.isPresent()) {
-                if (parserState.forbidsSyntax(eff.get().getClass())) {
-                    logger.setContext(ErrorContext.RESTRICTED_SYNTAXES);
-                    logger.error("The enclosing section does not allow the use of this effect: " + eff.get().toString(TriggerContext.DUMMY, logger.isDebug()), ErrorType.SEMANTIC_ERROR);
-                    return Optional.empty();
+            SyntaxStack previous = SyntaxStackLocal.getCurrent();
+            EffectSyntaxStack stack = new EffectSyntaxStack(s, recentEffect, previous);
+            SyntaxStackLocal.push(stack);
+            try {
+                var eff = matchEffectInfo(s, recentEffect, parserState, logger);
+                if (eff.isPresent()) {
+                    if (parserState.forbidsSyntax(eff.get().getClass())) {
+                        logger.setContext(ErrorContext.RESTRICTED_SYNTAXES);
+                        logger.error("The enclosing section does not allow the use of this effect: " + eff.get().toString(TriggerContext.DUMMY, logger.isDebug()), ErrorType.SEMANTIC_ERROR);
+                        return Optional.empty();
+                    }
+                    recentEffects.acknowledge(recentEffect);
+                    logger.clearErrors();
+                    return eff;
                 }
-                recentEffects.acknowledge(recentEffect);
-                logger.clearErrors();
-                return eff;
+                logger.forgetError();
+            } finally {
+                if (previous != null)
+                    SyntaxStackLocal.push(previous);
+                else
+                    SyntaxStackLocal.pop();
             }
-            logger.forgetError();
         }
 
         logger.setContext(ErrorContext.NO_MATCH);

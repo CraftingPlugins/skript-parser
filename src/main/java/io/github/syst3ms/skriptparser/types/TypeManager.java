@@ -41,8 +41,8 @@ public class TypeManager {
      */
     public static Optional<? extends Type<?>> getByName(String name) {
         for (var t : nameToType.values()) {
-            var forms = t.getPluralForms();
-            if (name.equalsIgnoreCase(forms[0]) || name.equalsIgnoreCase(forms[1])) {
+            var patterns = t.getPatterns();
+            if (patterns[0].matcher(name).matches() || patterns[1].matcher(name).matches()) {
                 return Optional.of(t);
             }
         }

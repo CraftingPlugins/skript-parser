@@ -161,7 +161,7 @@ public class DefaultRegistration {
                 .register();
 
         registration.newType(Type.class, "type", "type@s")
-                .literalParser(s -> TypeManager.getByExactName(s.toLowerCase()).orElse(null))
+                .literalParser(s -> TypeManager.getByName(s).orElse(null))
                 .toStringFunction(Type::getBaseName)
                 .register();
 

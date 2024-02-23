@@ -2,6 +2,8 @@ package io.github.syst3ms.skriptparser.log;
 
 import io.github.syst3ms.skriptparser.file.FileElement;
 import io.github.syst3ms.skriptparser.file.FileSection;
+import io.github.syst3ms.skriptparser.trace.SyntaxStack;
+import io.github.syst3ms.skriptparser.trace.SyntaxStackLocal;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
