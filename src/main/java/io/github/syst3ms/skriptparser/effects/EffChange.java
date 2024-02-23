@@ -35,8 +35,9 @@ public class EffChange extends Effect {
     public static final PatternInfos<ChangeMode> PATTERNS = new PatternInfos<>(new Object[][]{
             {"set %~objects% to %objects%", ChangeMode.SET},
             {"%~objects% = %objects%", ChangeMode.SET},
-            {"add %objects% to %~objects%", ChangeMode.ADD},
+            {"(give|add) %objects% to %~objects%", ChangeMode.ADD},
             {"%~objects% += %objects%", ChangeMode.ADD},
+            //{"give %~objects% %objects%", ChangeMode.ADD},
             {"remove %objects% from %~objects%", ChangeMode.REMOVE},
             {"%~objects% -= %objects%", ChangeMode.REMOVE},
             {"remove (all|every) %objects% from %~objects%", ChangeMode.REMOVE_ALL},
