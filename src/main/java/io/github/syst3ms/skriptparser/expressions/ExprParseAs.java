@@ -8,11 +8,14 @@ import io.github.syst3ms.skriptparser.log.ErrorType;
 import io.github.syst3ms.skriptparser.parsing.ParseContext;
 import io.github.syst3ms.skriptparser.types.Type;
 import io.github.syst3ms.skriptparser.types.TypeManager;
+import io.github.syst3ms.skriptparser.types.changers.ChangeMode;
+import io.github.syst3ms.skriptparser.types.changers.Changer;
 import io.github.syst3ms.skriptparser.util.SkriptDate;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 
 /**
  * The object parsed as a given type.
@@ -41,7 +44,7 @@ public class ExprParseAs implements Expression<Object> {
 
 	private Expression<String> expr;
 	private Expression<Type<?>> type;
-	private Class<?> parseTo;
+	private Type<?> parseTo;
 	@Nullable
 	private Expression<String> format;
 
@@ -51,9 +54,8 @@ public class ExprParseAs implements Expression<Object> {
 		expr = (Expression<String>) expressions[0];
 		type = (Expression<Type<?>>) expressions[1];
 		parseTo = ((Literal<Type<?>>) expressions[1]).getSingle()
-				.orElseThrow(AssertionError::new)
-				.getTypeClass();
-		if (parseTo == String.class) {
+				.orElseThrow(AssertionError::new);
+		if (parseTo.getTypeClass() == String.class) {
 			parseContext.getLogger().error(
 					"Parsing as string is redundant",
 					ErrorType.SEMANTIC_ERROR,
@@ -70,7 +72,7 @@ public class ExprParseAs implements Expression<Object> {
 	public Object[] getValues(TriggerContext ctx) {
 		return expr.getSingle(ctx)
 				.map(s -> {
-					if (parseTo == SkriptDate.class) {
+					if (parseTo.getTypeClass() == SkriptDate.class) {
 						SimpleDateFormat parseFormat = new SimpleDateFormat(
 								format != null
 										? format.getSingle(ctx).map(val -> (String) val).orElse(SkriptDate.DATE_FORMAT)
@@ -86,7 +88,7 @@ public class ExprParseAs implements Expression<Object> {
 							return null;
 						}
 					} else {
-						return TypeManager.getByClass(parseTo)
+						return TypeManager.getByClass(parseTo.getTypeClass())
 								.map (t -> (Type<?>) t)
 								.filter(t -> t.getLiteralParser().isPresent())
 								.map(t -> t.getLiteralParser().get().apply(s))
@@ -99,7 +101,22 @@ public class ExprParseAs implements Expression<Object> {
 
 	@Override
 	public Class<?> getReturnType() {
-		return parseTo;
+		return parseTo.getTypeClass();
+	}
+
+	@Override
+	public Optional<Class<?>[]> acceptsChange(ChangeMode mode) {
+		Optional<? extends Changer<?>> changer = this.parseTo.getDefaultChanger();
+
+        return changer.map(value -> value.acceptsChange(mode));
+    }
+
+	@Override
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public void change(TriggerContext ctx, ChangeMode changeMode, Object[] changeWith) {
+		Optional<? extends Changer> optional = this.parseTo.getDefaultChanger();
+
+		optional.ifPresent(changer -> changer.change(getValues(ctx), changeWith, changeMode));
 	}
 
 	@Override
