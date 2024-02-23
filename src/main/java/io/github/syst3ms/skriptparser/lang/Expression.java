@@ -123,6 +123,9 @@ public interface Expression<T> extends SyntaxElement {
                 haystack = haystack.getComponentType();
             if (haystack.isAssignableFrom(needle))
                 return true;
+            // accepts change when there is a converter from the needle to the haystack
+            if (Converters.converterExists(needle, haystack))
+                return true;
         }
         return false;
     }

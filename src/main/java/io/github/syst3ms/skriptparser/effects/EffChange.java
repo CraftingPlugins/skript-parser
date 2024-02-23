@@ -83,7 +83,7 @@ public class EffChange extends Effect {
                         logger.error(changedString + " cannot be set to anything ", ErrorType.SEMANTIC_ERROR);
                         break;
                     case ADD:
-                        logger.error("Nothing can be added to " + changedString, ErrorType.SEMANTIC_ERROR);
+                        logger.error("Nothing can be added to " + changedString + " ", ErrorType.SEMANTIC_ERROR);
                         break;
                     case REMOVE_ALL:
                     case REMOVE:
@@ -102,7 +102,7 @@ public class EffChange extends Effect {
                         logger.error(changedString + " cannot be set to " + changeTypeName, ErrorType.SEMANTIC_ERROR);
                         break;
                     case ADD:
-                        logger.error(changeTypeName + " cannot be added to " + changedString, ErrorType.SEMANTIC_ERROR);
+                        logger.error(changeTypeName + " cannot be added to " + changedString + " (" + changeWith.getClass().getSimpleName() + ")", ErrorType.SEMANTIC_ERROR);
                         break;
                     case REMOVE_ALL:
                     case REMOVE:

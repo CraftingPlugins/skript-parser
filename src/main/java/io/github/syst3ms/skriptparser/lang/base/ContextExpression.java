@@ -4,8 +4,11 @@ import io.github.syst3ms.skriptparser.lang.Expression;
 import io.github.syst3ms.skriptparser.lang.TriggerContext;
 import io.github.syst3ms.skriptparser.parsing.ParseContext;
 import io.github.syst3ms.skriptparser.registration.context.ContextValue;
+import io.github.syst3ms.skriptparser.types.changers.ChangeMode;
 import lombok.Getter;
 import org.jetbrains.annotations.Contract;
+
+import java.util.Optional;
 
 /**
  * An {@link Expression} that corresponds to a contextual value. Each trigger
@@ -31,6 +34,24 @@ public class ContextExpression<C extends TriggerContext, T> implements Expressio
 	@Contract("_, _, _ -> fail")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, ParseContext parseContext) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Optional<Class<?>[]> acceptsChange(ChangeMode mode) {
+		return info.getReturnType()
+				.getType()
+				.getDefaultChanger()
+				.map(changer -> changer.acceptsChange(mode));
+	}
+
+	@Override
+	public void change(TriggerContext ctx, ChangeMode changeMode, Object[] changeWith) {
+		assert info.getContext().isInstance(ctx);
+
+		info.getReturnType()
+				.getType()
+				.getDefaultChanger()
+				.ifPresent(changer -> changer.change(info.getFunction().apply((C) ctx), changeWith, changeMode));
 	}
 
 	@SuppressWarnings("unchecked")

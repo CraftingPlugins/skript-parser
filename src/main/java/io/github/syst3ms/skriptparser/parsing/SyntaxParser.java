@@ -124,12 +124,6 @@ public class SyntaxParser {
             s = s.substring(1, s.length() - 1);
         }
 
-        var literal = parseLiteral(s, expectedType, parserState, logger);
-        if (literal.isPresent()) {
-            logger.clearErrors();
-            return literal;
-        }
-
         var variable = (Optional<? extends Variable<? extends T>>) Variables.parseVariable(s, expectedType.getType().getTypeClass(), parserState, logger);
         if (variable.isPresent()) {
             if (variable.filter(v -> !v.isSingle() && expectedType.isSingle()).isPresent()) {
@@ -185,6 +179,12 @@ public class SyntaxParser {
         if (contextValue.isPresent()) {
             logger.clearErrors();
             return contextValue;
+        }
+
+        var literal = parseLiteral(s, expectedType, parserState, logger);
+        if (literal.isPresent()) {
+            logger.clearErrors();
+            return literal;
         }
 
         logger.setContext(ErrorContext.NO_MATCH);
