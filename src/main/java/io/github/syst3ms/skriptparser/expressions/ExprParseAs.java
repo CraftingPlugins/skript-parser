@@ -11,6 +11,7 @@ import io.github.syst3ms.skriptparser.types.TypeManager;
 import io.github.syst3ms.skriptparser.types.changers.ChangeMode;
 import io.github.syst3ms.skriptparser.types.changers.Changer;
 import io.github.syst3ms.skriptparser.util.SkriptDate;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.ParseException;
@@ -32,6 +33,7 @@ import java.util.Optional;
  * @since ALPHA
  * @author Mwexim
  */
+@Getter
 public class ExprParseAs implements Expression<Object> {
 	static {
 		Parser.getMainRegistration().addExpression(
