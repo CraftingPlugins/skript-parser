@@ -95,7 +95,10 @@ public class EffChange extends Effect {
                 return false;
             } else if (!changed.acceptsChange(mode, changeWith)) {
                 var type = TypeManager.getByClassExact(changeWith.getReturnType());
-                assert type.isPresent();
+                if (type.isEmpty()) {
+                    logger.error("The type of " + changeWith.getReturnType() + " is not supported", ErrorType.SEMANTIC_ERROR);
+                    return false;
+                }
                 String changeTypeName = type.get().withIndefiniteArticle(!changeWith.isSingle());
                 switch (mode) {
                     case SET:

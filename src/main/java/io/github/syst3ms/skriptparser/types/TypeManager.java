@@ -64,18 +64,82 @@ public class TypeManager {
 
     public static <T> Optional<? extends Type<? super T>> getByClass(Class<T> c) {
         Optional<? extends Type<? super T>> type = getByClassExact(c);
-        var superclass = c.getSuperclass();
-        while (superclass != null && type.isEmpty()) {
-            type = getByClass(superclass);
-            superclass = superclass.getSuperclass();
+        if (type.isPresent())
+            return type;
+
+        int lowestDifference = Integer.MAX_VALUE;
+        Type<?> lowestType = null;
+
+        for (var entry : classToType.entrySet()) {
+            if (entry.getKey() == Object.class)
+                continue;
+
+            var typeClass = entry.getKey();
+            var typeType = entry.getValue();
+            if (typeClass.isAssignableFrom(c)) {
+                var difference = getInheritanceLevelDifference(typeClass, c);
+                if (difference < lowestDifference) {
+                    lowestDifference = difference;
+                    lowestType = typeType;
+                }
+            }
         }
-        var interf = (Class<? super T>[]) c.getInterfaces();
-        var i = 0;
-        while ((type.isEmpty() || type.filter(t -> t.getTypeClass() == Object.class).isPresent()) && i < interf.length) {
-            type = getByClass(interf[i]);
-            i++;
+
+        if (lowestType != null)
+            classToType.put(c, lowestType);
+
+        return Optional.ofNullable((Type<? super T>) lowestType);
+    }
+
+    public static int getInheritanceLevelDifference(Class<?> class1, Class<?> class2) {
+        // Get the inheritance hierarchy for class1
+        List<Class<?>> hierarchy1 = getHierarchy(class1);
+
+        // Get the inheritance hierarchy for class2
+        List<Class<?>> hierarchy2 = getHierarchy(class2);
+
+        // Find the common ancestor (lowest common superclass)
+        int commonAncestorIndex = findCommonAncestorIndex(hierarchy1, hierarchy2);
+
+        // Calculate the difference in inheritance levels
+        return hierarchy1.size() - commonAncestorIndex + hierarchy2.size() - commonAncestorIndex - 2;
+    }
+
+    private static List<Class<?>> getHierarchy(Class<?> cls) {
+        List<Class<?>> hierarchy = new ArrayList<>();
+        Class<?> currentClass = cls;
+
+        // Traverse the class hierarchy upwards
+        while (currentClass != null && currentClass != Object.class) {
+            hierarchy.add(currentClass);
+            currentClass = currentClass.getSuperclass();
         }
-        return type;
+
+        // Traverse the interface hierarchy
+        Class<?>[] interfaces = cls.getInterfaces();
+        for (Class<?> interf : interfaces) {
+            hierarchy.addAll(getHierarchy(interf));
+        }
+
+        // Reverse the hierarchy list to get the hierarchy from top to bottom
+        Collections.reverse(hierarchy);
+        return hierarchy;
+    }
+
+    private static int findCommonAncestorIndex(List<Class<?>> hierarchy1, List<Class<?>> hierarchy2) {
+        int commonAncestorIndex = 0;
+        int minLength = Math.min(hierarchy1.size(), hierarchy2.size());
+
+        // Find the index of the common ancestor
+        for (int i = 0; i < minLength; i++) {
+            if (hierarchy1.get(i).equals(hierarchy2.get(i))) {
+                commonAncestorIndex = i;
+            } else {
+                break;
+            }
+        }
+
+        return commonAncestorIndex;
     }
 
     public static String toString(Object[] objects) {
