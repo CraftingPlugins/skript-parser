@@ -38,6 +38,20 @@ public interface SyntaxElement {
     String toString(TriggerContext ctx, boolean debug);
 
     /**
+     * @return whether this syntax element is a suspension point or not
+     */
+    default boolean isSuspensionPoint() {
+        return false;
+    }
+
+    /**
+     * @return whether this syntax element contains a suspension point or not
+     */
+    default boolean containsSuspensionPoint() {
+        return false;
+    }
+
+    /**
      * Checks whether this syntax element is inside of specific given {@link CodeSection}s.
      *
      * This method shouldn't be used for {@linkplain SyntaxElement}s that should only work with specific {@link TriggerContext}s.

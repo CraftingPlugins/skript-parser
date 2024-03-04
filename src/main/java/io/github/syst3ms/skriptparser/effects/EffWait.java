@@ -119,6 +119,11 @@ public class EffWait extends Effect {
     }
 
     @Override
+    public boolean isSuspensionPoint() {
+        return true;
+    }
+
+    @Override
     public String toString(TriggerContext ctx, boolean debug) {
         return "wait " + duration.toString(ctx, debug);
     }

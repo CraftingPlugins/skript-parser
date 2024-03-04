@@ -75,6 +75,14 @@ public abstract class CodeSection extends Statement {
         last = items.isEmpty() ? null : items.get(items.size() - 1);
     }
 
+    @Override
+    public boolean containsSuspensionPoint() {
+        if (this.items == null)
+            throw new IllegalStateException("The section has not been loaded yet");
+
+        return items.stream().anyMatch(Statement::isSuspensionPoint);
+    }
+
     /**
      * The items returned by this method are not representative of the execution of the code, meaning that all items
      * in the list may not be all executed. The list should rather be considered as a flat view of all the lines inside
